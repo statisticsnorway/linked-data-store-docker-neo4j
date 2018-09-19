@@ -16,10 +16,11 @@ ENV JAVA_HOME=/opt/jdk
 #
 RUN ["jlink", "--strip-debug", "--no-header-files", "--no-man-pages", "--compress=2", "--module-path", "/opt/jdk/jmods", "--output", "/linked",\
  "--add-modules", "jdk.unsupported,java.base,java.management,java.net.http,java.xml,java.naming"]
-COPY src /lds/src/
 COPY pom.xml /lds/
 WORKDIR /lds
-RUN mvn install && mvn dependency:copy-dependencies
+RUN mvn verify dependency:go-offline
+COPY src /lds/src/
+RUN mvn -o verify && mvn -o dependency:copy-dependencies
 
 #
 # Build LDS image
