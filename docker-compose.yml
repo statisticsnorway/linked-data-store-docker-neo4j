@@ -1,0 +1,26 @@
+version: '3.3'
+
+services:
+
+  lds-neo4j:
+    image: lds-neo4j:dev
+    ports:
+    - "9090:9090"
+    volumes:
+    - ./conf:/conf:ro
+    - ./schemas:/schemas:ro
+    depends_on:
+    - db-neo4j
+
+  db-neo4j:
+    image: neo4j:3.4
+    ports:
+    - "7474:7474"
+    - "7687:7687"
+    volumes:
+    - neo-data:/data
+    environment:
+    - NEO4J_AUTH
+
+volumes:
+  neo-data:

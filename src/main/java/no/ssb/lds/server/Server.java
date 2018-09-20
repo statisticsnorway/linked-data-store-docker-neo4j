@@ -21,8 +21,20 @@ public class Server {
                 .systemProperties()
                 .build();
 
-        UndertowApplication application = UndertowApplication.initializeUndertowApplication(configuration);
+        UndertowApplication app = null;
+        do {
+            try {
+                app = UndertowApplication.initializeUndertowApplication(configuration);
+            } catch (RuntimeException e) {
+                try {
+                    Thread.sleep(1 * 1000);
+                } catch (InterruptedException ie) {
+                    throw new RuntimeException(e);
+                }
+            }
+        } while (app == null);
 
+        UndertowApplication application = app;
         try {
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 LOG.warn("ShutdownHook triggered..");
