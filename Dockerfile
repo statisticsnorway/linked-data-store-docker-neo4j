@@ -5,7 +5,7 @@ RUN apk --no-cache add maven curl tar gzip
 #
 # Install JDK
 #
-RUN curl https://download.java.net/java/early_access/alpine/28/binaries/openjdk-11+28_linux-x64-musl_bin.tar.gz -o jdk.tar.gz
+ADD "https://storage.googleapis.com/ssb-jdk-mirror/openjdk-11%2B28_linux-x64-musl_bin.tar.gz" /jdk.tar.gz
 RUN mkdir -p /opt/jdk
 RUN tar xzf /jdk.tar.gz --strip-components=1 -C /opt/jdk
 ENV PATH=/opt/jdk/bin:$PATH
@@ -32,7 +32,7 @@ FROM alpine:latest
 #
 COPY --from=build /linked /opt/jdk/
 COPY --from=build /lds/target/dependency /opt/lds/lib/
-COPY --from=build /lds/target/linked-data-store-neo4j-0.1-SNAPSHOT.jar /opt/lds/linked-data-store-neo4j-0.1-SNAPSHOT.jar
+COPY --from=build /lds/target/linked-data-store-*.jar /opt/lds/server/
 RUN touch /opt/lds/saga.log
 
 ENV PATH=/opt/jdk/bin:$PATH
@@ -43,4 +43,4 @@ VOLUME ["/conf", "/schemas"]
 
 EXPOSE 9090
 
-CMD ["java", "-cp", "linked-data-store-neo4j-0.1-SNAPSHOT.jar:lib/*", "no.ssb.lds.server.Server"]
+CMD ["java", "-cp", "/opt/lds/server/*:/opt/lds/lib/*", "no.ssb.lds.server.Server"]
