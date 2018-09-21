@@ -48,7 +48,7 @@ public class Server {
 
             application.enableSagaExecutionAutomaticDeadlockDetectionAndResolution();
 
-            application.triggerRecoveryOfIncompleteSagas();
+            // application.triggerRecoveryOfIncompleteSagas();
 
             // wait for termination signal
             try {
