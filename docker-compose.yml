@@ -7,8 +7,8 @@ services:
     ports:
     - "9090:9090"
     volumes:
-    - ./conf:/conf:ro
-    - ./schemas:/schemas:ro
+    - $CONF_FOLDER:/conf:ro
+    - $SCHEMA_FOLDER:/schemas:ro
     depends_on:
     - db-neo4j
 
