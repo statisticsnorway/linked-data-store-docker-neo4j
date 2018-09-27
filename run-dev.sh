@@ -1,17 +1,19 @@
 #!/usr/bin/env bash
 
+mkdir -p conf
+mkdir -p schemas
+
 if [ "$1" == "clean" ]; then
-  echo "Cleaning existing neo4j data volume"
-  docker rm $(docker ps -aq -f "name=docker_db-neo4j_1")
-  docker volume rm docker_neo-data
-  docker volume create docker_neo-data
+  echo "Cleaning existing associated volumes and data"
+  docker-compose down
+  docker volume rm $(docker volume ls -q -f "name=ldsneo4j")
 else
-  echo "Reusing existing volume docker_neo-data"
+  echo "Reusing existing volumes and data"
 fi
 
 ENV_FILE='docker-compose.env'
 if [ -f $ENV_FILE ]; then
-    export $(grep -v '^#' $ENV_FILE | xargs -0)
+    export $(grep -v '^#' $ENV_FILE | envsubst | xargs -0)
 fi
 
-docker-compose -f docker-compose.yml up --remove-orphans
+docker-compose up --remove-orphans
