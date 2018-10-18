@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
 
-  lds-neo4j:
+  lds:
     image: lds-neo4j:dev
     ports:
     - "9090:9090"
