@@ -17,6 +17,7 @@ public class Server {
                 .propertiesResource(UndertowApplication.getDefaultConfigurationResourcePath())
                 .propertiesResource("application-neo4j-defaults.properties")
                 .propertiesResource("/conf/application.properties")
+                .propertiesResource("conf/application.properties")
                 .environment("LDS_")
                 .systemProperties()
                 .build();
