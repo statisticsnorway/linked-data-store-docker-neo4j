@@ -61,12 +61,12 @@
         <dependency>
             <groupId>no.ssb.lds</groupId>
             <artifactId>linked-data-store-core</artifactId>
-            <version>0.7</version>
+            <version>0.8</version>
         </dependency>
         <dependency>
             <groupId>no.ssb.lds</groupId>
             <artifactId>linked-data-store-persistence-provider-neo4j</artifactId>
-            <version>0.5</version>
+            <version>0.6</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
