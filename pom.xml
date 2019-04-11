@@ -4,7 +4,7 @@
 
     <groupId>no.ssb.lds</groupId>
     <artifactId>linked-data-store-neo4j</artifactId>
-    <version>0.10-SNAPSHOT</version>
+    <version>0.10</version>
     <packaging>jar</packaging>
 
     <name>LinkedDataStore Neo4j Server</name>
@@ -49,7 +49,7 @@
         <connection>scm:git:git://github.com/statisticsnorway/linked-data-store-docker-neo4j.git</connection>
         <developerConnection>scm:git:git@github.com:statisticsnorway/linked-data-store-docker-neo4j.git</developerConnection>
         <url>https://github.com/statisticsnorway/linked-data-store-docker-neo4j/tree/master</url>
-        <tag>HEAD</tag>
+        <tag>v0.10</tag>
     </scm>
 
     <dependencies>
