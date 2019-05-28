@@ -1,4 +1,4 @@
-FROM maven:3.6.1-jdk-11-slim as packager
+FROM azul/zulu-openjdk-alpine:11 as packager
 
 RUN { \
         java --version ; \
@@ -12,18 +12,23 @@ ENV JAVA_MINIMAL=/opt/jre
 RUN jlink \
     --verbose \
     --add-modules \
-        java.base,java.sql,java.naming,java.desktop,java.management,java.security.jgss,java.instrument \
+         java.base,java.desktop,java.management,jdk.unsupported,java.xml,java.net.http,java.naming \
+        # java.base,java.sql,java.naming,java.desktop,java.management,java.security.jgss,java.instrument \
         # java.naming - javax/naming/NamingException
         # java.desktop - java/beans/PropertyEditorSupport
         # java.management - javax/management/MBeanServer
         # java.security.jgss - org/ietf/jgss/GSSException
         # java.instrument - java/lang/instrument/IllegalClassFormatException
+
     --compress 2 \
     --strip-debug \
     --no-header-files \
     --no-man-pages \
     --output "$JAVA_MINIMAL"
 
+RUN apk --no-cache add maven
+
+# Build lds
 WORKDIR /lds/server
 
 COPY pom.xml /lds/server/
@@ -48,5 +53,5 @@ RUN touch /opt/lds/saga.log
 WORKDIR /opt/lds
 VOLUME ["/conf", "/schemas"]
 EXPOSE 9090
-CMD ["java", "-cp", "/opt/lds/server/*:/opt/lds/lib/*", "no.ssb.lds.server.Server"]
+CMD ["-cp", "/opt/lds/server/*:/opt/lds/lib/*", "no.ssb.lds.server.Server"]
 ENTRYPOINT [ "java" ]
