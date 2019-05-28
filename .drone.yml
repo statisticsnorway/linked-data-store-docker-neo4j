@@ -30,7 +30,7 @@ steps:
 
 - name: publish
   depends_on:
-  - deploy
+  - build
   image: plugins/gcr
   settings:
 #    tags:
@@ -43,7 +43,7 @@ steps:
 
 - name: publish-gsim
   depends_on:
-  - deploy
+  - publish
   image: plugins/gcr
   settings:
 #    tags:
@@ -57,7 +57,7 @@ steps:
 
 - name: release
   depends_on:
-  - deploy
+  - build
   image: plugins/gcr
   settings:
     auto_tag: true
@@ -69,7 +69,7 @@ steps:
 
 - name: release-gsim
   depends_on:
-  - deploy
+  - release
   image: plugins/gcr
   settings:
     auto_tag: true
