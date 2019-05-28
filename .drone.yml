@@ -28,11 +28,9 @@ steps:
     event:
     - push
 
-- name: docker
-  image: plugins/docker
+- name: publish  
+  image: plugins/gcr
   settings:
     repo: eu.gcr.io/lds-sandkasse/lds-neo4j
-    username:
-      from_secret: docker_username
-    password:
-      from_secret: docker_password
+    json_key:
+      from_secret: service_account
