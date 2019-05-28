@@ -33,9 +33,8 @@ steps:
   - deploy
   image: plugins/gcr
   settings:
-    tags:
-    - "${DRONE_BRANCH//\\//-}${DRONE_TAG//\\//-}"
-    - "${DRONE_BRANCH//\\//-}${DRONE_TAG//\\//-}-${DRONE_COMMIT_SHA}"
+#    tags:
+#    - "${DRONE_BRANCH//\\//-}${DRONE_TAG//\\//-}-${DRONE_COMMIT_SHA:0:8}"
     dockerfile: Dockerfile
     registry: eu.gcr.io
     repo: lds-sandkasse/lds-neo4j
@@ -47,9 +46,8 @@ steps:
   - deploy
   image: plugins/gcr
   settings:
-    tags:
-    - "${DRONE_BRANCH//\\//-}${DRONE_TAG//\\//-}"
-    - "${DRONE_BRANCH//\\//-}${DRONE_TAG//\\//-}-${DRONE_COMMIT_SHA}"
+#    tags:
+#    - "${DRONE_BRANCH/\/-}${DRONE_TAG/\/-}-${DRONE_COMMIT_SHA:0:8}"
     dockerfile: Dockerfile.gsim
     registry: eu.gcr.io
     repo: lds-sandkasse/lds-neo4j-gsim
