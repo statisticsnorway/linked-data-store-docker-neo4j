@@ -1,0 +1,17 @@
+FROM statisticsnorway/raml-to-jsonschema:latest AS build-env
+
+RUN apk update && \
+    apk upgrade && \
+    apk add git
+
+# Fetch the latest schema
+RUN git clone https://github.com/statisticsnorway/gsim-raml-schema /gsim
+
+WORKDIR /gsim
+
+RUN ["java", "-cp", "/opt/raml-to-jsonschema/bin/*", "no.ssb.raml.RamltoJsonSchemaConverter", "/gsim/jsonschemas/", "/gsim/schemas/"]
+
+
+FROM eu.gcr.io/lds-sandkasse/lds-neo4j:latest
+
+COPY --from=build-env /gsim/jsonschemas/ /schemas

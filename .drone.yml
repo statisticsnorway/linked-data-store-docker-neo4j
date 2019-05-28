@@ -28,10 +28,20 @@ steps:
     event:
     - push
 
-- name: publish  
+- name: publish
   image: plugins/gcr
   settings:
+    dockerfile: Dockerfile
     registry: eu.gcr.io
     repo: lds-sandkasse/lds-neo4j
+    json_key:
+      from_secret: service_account
+
+- name: publish-gsim
+  image: plugins/gcr
+  settings:
+    dockerfile: Dockerfile-gsim
+    registry: eu.gcr.io
+    repo: lds-sandkasse/lds-neo4j-gsim
     json_key:
       from_secret: service_account
