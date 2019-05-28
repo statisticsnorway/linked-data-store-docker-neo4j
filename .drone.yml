@@ -31,7 +31,6 @@ steps:
 - name: publish
   image: plugins/gcr
   settings:
-    auto_tag: true
     tags:
     - "${DRONE_BRANCH//\\//-}${DRONE_TAG//\\//-}"
     - "${DRONE_BRANCH//\\//-}${DRONE_TAG//\\//-}-${DRONE_COMMIT_SHA}"
@@ -44,10 +43,30 @@ steps:
 - name: publish-gsim
   image: plugins/gcr
   settings:
-    auto_tag: true
     tags:
     - "${DRONE_BRANCH//\\//-}${DRONE_TAG//\\//-}"
     - "${DRONE_BRANCH//\\//-}${DRONE_TAG//\\//-}-${DRONE_COMMIT_SHA}"
+    dockerfile: Dockerfile.gsim
+    registry: eu.gcr.io
+    repo: lds-sandkasse/lds-neo4j-gsim
+    json_key:
+      from_secret: service_account
+
+
+- name: release
+  image: plugins/gcr
+  settings:
+    auto_tag: true
+    dockerfile: Dockerfile
+    registry: eu.gcr.io
+    repo: lds-sandkasse/lds-neo4j
+    json_key:
+      from_secret: service_account
+
+- name: release-gsim
+  image: plugins/gcr
+  settings:
+    auto_tag: true
     dockerfile: Dockerfile.gsim
     registry: eu.gcr.io
     repo: lds-sandkasse/lds-neo4j-gsim
