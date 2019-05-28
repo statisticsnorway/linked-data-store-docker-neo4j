@@ -31,6 +31,7 @@ steps:
 - name: publish  
   image: plugins/gcr
   settings:
-    repo: eu.gcr.io/lds-sandkasse/lds-neo4j
+    registry: eu.gcr.io
+    repo: lds-sandkasse/lds-neo4j
     json_key:
       from_secret: service_account
