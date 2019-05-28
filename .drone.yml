@@ -11,7 +11,7 @@ steps:
     GOOGLE_APPLICATION_CREDENTIALS: /sa.json
     SERVICE_ACCOUNT:
       from_secret: service_account
-  
+
 - name: deploy
   image: maven:3.6.0-jdk-11-slim
   commands:
@@ -31,6 +31,10 @@ steps:
 - name: publish
   image: plugins/gcr
   settings:
+    auto_tag: true
+    tags:
+    - "${DRONE_BRANCH//\\//-}${DRONE_TAG//\\//-}"
+    - "${DRONE_BRANCH//\\//-}${DRONE_TAG//\\//-}-${DRONE_COMMIT_SHA}"
     dockerfile: Dockerfile
     registry: eu.gcr.io
     repo: lds-sandkasse/lds-neo4j
@@ -40,7 +44,11 @@ steps:
 - name: publish-gsim
   image: plugins/gcr
   settings:
-    dockerfile: Dockerfile-gsim
+    auto_tag: true
+    tags:
+    - "${DRONE_BRANCH//\\//-}${DRONE_TAG//\\//-}"
+    - "${DRONE_BRANCH//\\//-}${DRONE_TAG//\\//-}-${DRONE_COMMIT_SHA}"
+    dockerfile: Dockerfile.gsim
     registry: eu.gcr.io
     repo: lds-sandkasse/lds-neo4j-gsim
     json_key:
