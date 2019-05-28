@@ -29,6 +29,8 @@ steps:
     - push
 
 - name: publish
+  depends_on:
+  - deploy
   image: plugins/gcr
   settings:
     tags:
@@ -41,6 +43,8 @@ steps:
       from_secret: service_account
 
 - name: publish-gsim
+  depends_on:
+  - deploy
   image: plugins/gcr
   settings:
     tags:
@@ -54,6 +58,8 @@ steps:
 
 
 - name: release
+  depends_on:
+  - deploy
   image: plugins/gcr
   settings:
     auto_tag: true
@@ -64,6 +70,8 @@ steps:
       from_secret: service_account
 
 - name: release-gsim
+  depends_on:
+  - deploy
   image: plugins/gcr
   settings:
     auto_tag: true
