@@ -78,3 +78,14 @@ steps:
     repo: lds-sandkasse/lds-neo4j-gsim
     json_key:
       from_secret: service_account
+
+- name: trigger
+  image: plugins/downstream
+  settings:
+    server: $DRONE_SYSTEM_HOST
+    token:
+      from_secret: drone_token
+    fork: true
+    timeout: 300
+    repositories:
+    - statisticsnorway/linked-data-store-docker-neo4j
