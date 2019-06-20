@@ -75,6 +75,12 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
+            <groupId>no.ssb.lds</groupId>
+            <artifactId>linked-data-store-search-provider-solr</artifactId>
+            <version>0.3</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
