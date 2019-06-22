@@ -105,7 +105,41 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <!--Profile used by drone ci/cd-->
+        <profile>
+            <id>drone</id>
+            <repositories>
+                <repository>
+                    <id>gcp-drone-snapshot</id>
+                    <url>gs://maven-cicd/snapshot/</url>
+                </repository>
+                <repository>
+                    <id>gcp-drone-release</id>
+                    <url>gs://maven-cicd/release/</url>
+                </repository>
+            </repositories>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>gcp-drone-snapshot</id>
+                    <url>gs://maven-cicd/snapshot</url>
+                </snapshotRepository>
+                <repository>
+                    <id>gcp-drone-release</id>
+                    <url>gs://maven-cicd/release</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+    </profiles>
+
     <build>
+        <extensions>
+            <extension>
+                <groupId>com.gkatzioura.maven.cloud</groupId>
+                <artifactId>google-storage-wagon</artifactId>
+                <version>1.7</version>
+            </extension>
+        </extensions>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>

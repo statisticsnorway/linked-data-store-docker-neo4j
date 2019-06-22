@@ -1,0 +1,91 @@
+kind: pipeline
+name: default
+
+steps:
+- name: build
+  image: maven:3.6.1-jdk-11-slim
+  commands:
+  - echo "$SERVICE_ACCOUNT" | /usr/bin/base64 -d > "$GOOGLE_APPLICATION_CREDENTIALS"
+  - mvn clean test -Pdrone -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+  environment:
+    GOOGLE_APPLICATION_CREDENTIALS: /sa.json
+    SERVICE_ACCOUNT:
+      from_secret: service_account
+
+- name: deploy
+  image: maven:3.6.0-jdk-11-slim
+  commands:
+  - echo "$SERVICE_ACCOUNT" | /usr/bin/base64 -d > "$GOOGLE_APPLICATION_CREDENTIALS"
+  - mvn deploy -P drone -B -DskipTests -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+  environment:
+    GOOGLE_APPLICATION_CREDENTIALS: /sa
+    SERVICE_ACCOUNT:
+      from_secret: service_account
+  when:
+    branch:
+    - master
+    - develop
+    event:
+    - push
+
+- name: publish
+  depends_on:
+  - build
+  image: plugins/gcr
+  settings:
+#    tags:
+#    - "${DRONE_BRANCH//\\//-}${DRONE_TAG//\\//-}-${DRONE_COMMIT_SHA:0:8}"
+    dockerfile: Dockerfile
+    registry: eu.gcr.io
+    repo: lds-sandkasse/lds-neo4j
+    json_key:
+      from_secret: service_account
+
+- name: publish-gsim
+  depends_on:
+  - publish
+  image: plugins/gcr
+  settings:
+#    tags:
+#    - "${DRONE_BRANCH/\/-}${DRONE_TAG/\/-}-${DRONE_COMMIT_SHA:0:8}"
+    dockerfile: Dockerfile.gsim
+    registry: eu.gcr.io
+    repo: lds-sandkasse/lds-neo4j-gsim
+    json_key:
+      from_secret: service_account
+
+
+- name: release
+  depends_on:
+  - build
+  image: plugins/gcr
+  settings:
+    auto_tag: true
+    dockerfile: Dockerfile
+    registry: eu.gcr.io
+    repo: lds-sandkasse/lds-neo4j
+    json_key:
+      from_secret: service_account
+
+- name: release-gsim
+  depends_on:
+  - release
+  image: plugins/gcr
+  settings:
+    auto_tag: true
+    dockerfile: Dockerfile.gsim
+    registry: eu.gcr.io
+    repo: lds-sandkasse/lds-neo4j-gsim
+    json_key:
+      from_secret: service_account
+
+- name: trigger
+  image: plugins/downstream
+  settings:
+    server: $DRONE_SYSTEM_HOST
+    token:
+      from_secret: drone_token
+    fork: true
+    timeout: 300
+    repositories:
+    - statisticsnorway/linked-data-store-docker-neo4j
